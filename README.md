@@ -1,2 +1,2 @@
 # otlw-publish
-A publishing and citation framework using etheruem micropayments
+A publishing and citation framework using micropayments
