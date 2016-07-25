@@ -82,8 +82,8 @@ contract Document
 
   function pay()
   {
-    uint amount = msg.value;
-    uint total = getTotalWeight();
+    var amount = msg.value;
+    var total = getTotalWeight();
     if(author.send(amount*(weights[author]/total)) == false)
     {
       throw;
@@ -99,8 +99,8 @@ contract Document
 
   function payout()
   {
-    uint amount = this.balance;
-    uint total = getTotalWeight();
+    var amount = this.balance;
+    var total = getTotalWeight();
     if(author.send(amount*(weights[author]/total)) == false)
     {
       throw;
