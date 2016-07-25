@@ -13,7 +13,7 @@ contract Document
     }
   }
 
-  function document(bytes dataHash)
+  function Document(bytes dataHash)
   {
     data = dataHash;
     author = msg.sender;

@@ -2,23 +2,24 @@ import "document.sol";
 
 contract Forum
 {
+  string name;
+  uint replyCost;
   mapping (address => string) titles;
   mapping (address => uint) timeStamp;
-  mapping (address => uint) replyCost;
   mapping (string => address[]) tag;
   mapping (address => address[]) replies;
   mapping (address => string[]) postTags;
 
-  function forum()
+  function forum(string forumName, uint cost)
   {
-
+    name = forumName;
+    replyCost = cost;
   }
 
-  function makePost(string title, bytes hash, uint costToReply) returns(address)
+  function makePost(string title, bytes hash) returns(address)
   {
     Document newPost = new Document(hash);
     titles[address(newPost)] = title;
-    replyCost[address(newPost)] = costToReply;
     timeStamp[address(newPost)] = now;
     return address(newPost);
   }
@@ -29,12 +30,12 @@ contract Forum
     postTags[post].push(tagToAdd);
   }
 
-  function makeReply(string title, bytes hash, address replyTo, uint weight, uint costToReply)
+  function makeReply(string title, bytes hash, address replyTo, uint weight)
   {
-    if(msg.value >= replyCost[replyTo])
+    if(msg.value >= replyCost)
     {
       replyTo.send(msg.value);
-      address reply = makePost(title, hash, costToReply);
+      address reply = makePost(title, hash);
       replies[replyTo].push(reply);
       Document(reply).addSource(replyTo, weight);
     }
