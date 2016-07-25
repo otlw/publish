@@ -19,6 +19,11 @@ contract Document
     author = msg.sender;
   }
 
+  function getData() constant returns(bytes)
+  {
+    return data;
+  }
+
   function addSource(address source, uint weight) onlyAuthor
   {
     sources.push(source);
