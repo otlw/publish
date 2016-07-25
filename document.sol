@@ -1,6 +1,6 @@
 contract Document
 {
-  bytes data;
+  string data;
   address author;
   address[] sources;
   mapping (address => uint) weights;
@@ -13,13 +13,13 @@ contract Document
     }
   }
 
-  function Document(bytes dataHash)
+  function Document(string dataHash)
   {
     data = dataHash;
     author = msg.sender;
   }
 
-  function getData() constant returns(bytes)
+  function getData() constant returns(string)
   {
     return data;
   }
