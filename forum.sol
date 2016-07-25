@@ -16,7 +16,7 @@ contract Forum
     replyCost = cost;
   }
 
-  function makePost(string title, bytes hash) returns(address)
+  function makePost(string title, bytes hash) constant returns(address)
   {
     Document newPost = new Document(hash);
     titles[address(newPost)] = title;
@@ -41,12 +41,12 @@ contract Forum
     }
   }
 
-  function getTitle(address post) returns(string)
+  function getTitle(address post) constant returns(string)
   {
     return titles[post];
   }
 
-  function getReplies(address post) returns(address[])
+  function getReplies(address post) constant returns(address[])
   {
     return replies[post];
   }
