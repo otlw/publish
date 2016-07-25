@@ -10,7 +10,7 @@ contract Forum
   mapping (address => address[]) replies;
   mapping (address => string[]) postTags;
 
-  function forum(string forumName, uint cost)
+  function Forum(string forumName, uint cost)
   {
     name = forumName;
     replyCost = cost;
