@@ -34,7 +34,10 @@ contract Forum
   {
     if(msg.value >= replyCost)
     {
-      replyTo.send(msg.value);
+      if(replyTo.send(msg.value) == false)
+      {
+        throw;
+      }
       address reply = makePost(title, hash);
       replies[replyTo].push(reply);
       Document(reply).addSource(replyTo, weight);

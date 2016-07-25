@@ -84,10 +84,16 @@ contract Document
   {
     uint amount = msg.value;
     uint total = getTotalWeight();
-    author.send(amount*(weights[author]/total));
+    if(author.send(amount*(weights[author]/total)) == false)
+    {
+      throw;
+    }
     for(uint j = 0; j < sources.length; j++)
     {
-      sources[j].send(weights[sources[j]]/total);
+      if(sources[j].send(weights[sources[j]]/total) == false)
+      {
+        throw;
+      }
     }
   }
 
@@ -95,10 +101,16 @@ contract Document
   {
     uint amount = this.balance;
     uint total = getTotalWeight();
-    author.send(amount*(weights[author]/total));
+    if(author.send(amount*(weights[author]/total)) == false)
+    {
+      throw;
+    }
     for(uint k = 0; k < sources.length; k++)
     {
-      sources[k].send(weights[sources[k]]/total);
+      if(sources[k].send(weights[sources[k]]/total) == false)
+      {
+        throw;
+      }
     }
   }
 }
