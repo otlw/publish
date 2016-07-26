@@ -46,10 +46,17 @@ function getReplies (address){
 function getIPFS (address) {
   console.log(address);
   var ipfsContent = documentContract.at(address).getData();
-  var dataString = ipfs.block.get(ipfsContent, function (err, data) {
-    return data;
+  ipfs.block.get(ipfsContent, function (err, res) {
+    if (err) {
+      return console.log(err);
+      }
+    else {
+      console.log(res);
+      return res;
+    }
+
   });
-  return dataString;
+
 }
 
 function getTitle (address) {
