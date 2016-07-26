@@ -1,7 +1,8 @@
 var forumAddress = '0x9C9253320969dAA501cCf07321CB952c2763d162';
 var forumABI = [ { "constant": false, "inputs": [ { "name": "title", "type": "string" }, { "name": "data", "type": "string" }, { "name": "replyTo", "type": "address" }, { "name": "weight", "type": "uint256" } ], "name": "makeReply", "outputs": [], "type": "function" }, { "constant": false, "inputs": [ { "name": "post", "type": "address" }, { "name": "tagToAdd", "type": "string" } ], "name": "addTag", "outputs": [], "type": "function" }, { "constant": true, "inputs": [ { "name": "post", "type": "address" } ], "name": "getNumberOfTags", "outputs": [ { "name": "", "type": "uint256", "value": "0" } ], "type": "function" }, { "constant": false, "inputs": [ { "name": "title", "type": "string" }, { "name": "data", "type": "string" } ], "name": "makePost", "outputs": [ { "name": "", "type": "address" } ], "type": "function" }, { "constant": true, "inputs": [ { "name": "tagName", "type": "string" } ], "name": "getPostsFromTag", "outputs": [ { "name": "", "type": "address[]", "value": [] } ], "type": "function" }, { "constant": true, "inputs": [ { "name": "post", "type": "address" }, { "name": "i", "type": "uint256" } ], "name": "getTagFromPosts", "outputs": [ { "name": "", "type": "string" } ], "type": "function" }, { "constant": true, "inputs": [ { "name": "post", "type": "address" } ], "name": "getTitle", "outputs": [ { "name": "", "type": "string", "value": "" } ], "type": "function" }, { "constant": true, "inputs": [ { "name": "post", "type": "address" } ], "name": "getReplies", "outputs": [ { "name": "", "type": "address[]", "value": [] } ], "type": "function" }, { "inputs": [ { "name": "forumName", "type": "string", "index": 0, "typeShort": "string", "bits": "", "displayName": "forum Name", "template": "elements_input_string", "value": "test" }, { "name": "cost", "type": "uint256", "index": 1, "typeShort": "uint", "bits": "256", "displayName": "cost", "template": "elements_input_uint", "value": "100" } ], "type": "constructor" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "_postAddress", "type": "address" } ], "name": "PostMade", "type": "event" } ];
 var documentABI =  [{"constant":false,"inputs":[],"name":"getTotalWeight","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"constant":false,"inputs":[],"name":"pay","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"getData","outputs":[{"name":"","type":"string"}],"type":"function"},{"constant":false,"inputs":[{"name":"weight","type":"uint256"}],"name":"setAuthorWeight","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"source","type":"address"},{"name":"weight","type":"uint256"}],"name":"addSource","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"source","type":"address"},{"name":"newValue","type":"uint256"}],"name":"modifySourceWeight","outputs":[],"type":"function"},{"constant":false,"inputs":[],"name":"payout","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"source","type":"address"}],"name":"removeSource","outputs":[],"type":"function"},{"constant":false,"inputs":[{"name":"newAuthor","type":"address"}],"name":"modifyAuthor","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"getAuthor","outputs":[{"name":"","type":"address"}],"type":"function"},{"constant":true,"inputs":[{"name":"requestedAddress","type":"address"}],"name":"getWeight","outputs":[{"name":"","type":"uint256"}],"type":"function"},{"inputs":[{"name":"dataHash","type":"string"}],"type":"constructor"}];
-var textContent
+var textContent;
+
 function init() {
   postAddress = decodeURI(getParameterByName('post'));
   tag = decodeURI(getParameterByName('tag'));
@@ -31,8 +32,9 @@ function init() {
     document.getElementById("proposal").textContent = "Give Stakers a Voice";
   }
   else {
+    var testcontent = getIPFS(postAddress);
+    console.log(testcontent);
     document.getElementById("title").textContent = getTitle(postAddress);
-    document.getElementById("bodyContent").textContent = getIPFS(postAddress);
   }
 }
 
@@ -46,13 +48,22 @@ function getReplies (address){
 function getIPFS (address) {
   console.log(address);
   var ipfsContent = documentContract.at(address).getData();
+  console.log(ipfsContent)
   ipfs.block.get(ipfsContent, function (err, res) {
     if (err) {
       return console.log(err);
       }
     else {
       console.log(res);
-      return res;
+      var result = ''
+      res.on('data', function(chunk) {
+        result += chunk
+      });
+      res.on('end', function() {
+        document.getElementById("bodyContent").textContent = result.substring(2);
+        console.log('stuff works')
+      })
+      return res.ReadableState;
     }
 
   });
