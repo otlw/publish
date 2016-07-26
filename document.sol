@@ -1,22 +1,30 @@
 contract Document
 {
   string data;
-  address author;
+  address[] authors;
   address[] sources;
   mapping (address => uint) weights;
 
-  modifier onlyAuthor
+  modifier onlyAuthors
   {
-    if(msg.sender != author)
+    bool x = false;
+    for(uint i = 0; x==false && i < authors.length; i++)
+    {
+      if(msg.sender == authors[i])
+      {
+        x = true;
+      }
+    }
+    if(x == false)
     {
       throw;
     }
   }
 
-  function Document(string dataHash)
+  function Document(string dataHash, address[] authorAddresses)
   {
     data = dataHash;
-    author = msg.sender;
+    authors = authorAddresses;
   }
 
   function getData() constant returns(string)
@@ -24,18 +32,18 @@ contract Document
     return data;
   }
 
-  function addSource(address source, uint weight) onlyAuthor
+  function addSource(address source, uint weight) onlyAuthors
   {
     sources.push(source);
     weights[source] = weight;
   }
 
-  function modifySourceWeight(address source, uint newValue) onlyAuthor
+  function modifySourceWeight(address source, uint newValue) onlyAuthors
   {
     weights[source] = newValue;
   }
 
-  function removeSource(address source) onlyAuthor
+  function removeSource(address source) onlyAuthors
   {
     address[] memory newSources = new address[] (sources.length - 1);
     uint j = 0;
@@ -55,24 +63,28 @@ contract Document
     return weights[requestedAddress];
   }
 
-  function modifyAuthor(address newAuthor) onlyAuthor
+  function modifyAuthor(address[] newAuthors) onlyAuthors
   {
-    author = newAuthor;
+    authors = newAuthors;
   }
 
-  function getAuthor() constant returns(address)
+  function getAuthors() constant returns(address[])
   {
-    return author;
+    return authors;
   }
 
-  function setAuthorWeight(uint weight) onlyAuthor
+  function setAuthorWeight(uint weight) onlyAuthors
   {
-    weights[author] = weight;
+    weights[msg.sender] = weight;
   }
 
   function getTotalWeight() returns(uint)
   {
-    uint total = weights[author];
+    uint total = 0;
+    for(uint j = 0; j < authors.length; j++)
+    {
+      total += weights[authors[j]];
+    }
     for(uint i = 0; i < sources.length; i++)
     {
       total += weights[sources[i]];
@@ -84,9 +96,12 @@ contract Document
   {
     var amount = msg.value;
     var total = getTotalWeight();
-    if(author.send(amount*(weights[author]/total)) == false)
+    for(uint i = 0; i < authors.length; i++)
     {
-      throw;
+      if(authors[i].send(amount*(weights[authors[i]]/total)) == false)
+      {
+        throw;
+      }
     }
     for(uint j = 0; j < sources.length; j++)
     {
@@ -101,9 +116,12 @@ contract Document
   {
     var amount = this.balance;
     var total = getTotalWeight();
-    if(author.send(amount*(weights[author]/total)) == false)
+    for(uint i = 0; i < authors.length; i++)
     {
-      throw;
+      if(authors[i].send(amount*(weights[authors[i]]/total)) == false)
+      {
+        throw;
+      }
     }
     for(uint k = 0; k < sources.length; k++)
     {

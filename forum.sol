@@ -9,6 +9,7 @@ contract Forum
   mapping (string => address[]) tag;
   mapping (address => address[]) replies;
   mapping (address => string[]) postTags;
+  mapping (address => address[]) postsByAuthor;
 
   event PostMade
   ( address _postAddress);
@@ -21,9 +22,13 @@ contract Forum
 
   function makePost(string title, string data)
   {
-    Document newPost = new Document(data);
+    address[] memory authors = new address[] (2);
+    authors[0] = msg.sender;
+    authors[1] = address(this);
+    Document newPost = new Document(data, authors);
     titles[address(newPost)] = title;
     timeStamp[address(newPost)] = now;
+    postsByAuthor[msg.sender].push(address(newPost));
     PostMade(address(newPost));
   }
 
@@ -41,9 +46,16 @@ contract Forum
       {
         throw;
       }
-      address reply = makePost(title, data);
-      replies[replyTo].push(reply);
-      Document(reply).addSource(replyTo, weight);
+      address[] memory authors = new address[] (2);
+      authors[0] = msg.sender;
+      authors[1] = address(this);
+      Document newPost = new Document(data, authors);
+      titles[address(newPost)] = title;
+      timeStamp[address(newPost)] = now;
+      postsByAuthor[msg.sender].push(address(newPost));
+      PostMade(address(newPost));
+      replies[replyTo].push(address(newPost));
+      Document(address(newPost)).addSource(replyTo, weight);
     }
   }
 
