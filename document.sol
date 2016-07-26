@@ -1,6 +1,6 @@
 contract Document
 {
-  bytes data;
+  string data;
   address author;
   address[] sources;
   mapping (address => uint) weights;
@@ -13,13 +13,13 @@ contract Document
     }
   }
 
-  function Document(bytes dataHash)
+  function Document(string dataHash)
   {
     data = dataHash;
     author = msg.sender;
   }
 
-  function getData() constant returns(bytes)
+  function getData() constant returns(string)
   {
     return data;
   }
@@ -82,8 +82,8 @@ contract Document
 
   function pay()
   {
-    uint amount = msg.value;
-    uint total = getTotalWeight();
+    var amount = msg.value;
+    var total = getTotalWeight();
     if(author.send(amount*(weights[author]/total)) == false)
     {
       throw;
@@ -99,8 +99,8 @@ contract Document
 
   function payout()
   {
-    uint amount = this.balance;
-    uint total = getTotalWeight();
+    var amount = this.balance;
+    var total = getTotalWeight();
     if(author.send(amount*(weights[author]/total)) == false)
     {
       throw;

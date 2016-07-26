@@ -10,18 +10,21 @@ contract Forum
   mapping (address => address[]) replies;
   mapping (address => string[]) postTags;
 
+  event PostMade
+  ( address _postAddress);
+
   function Forum(string forumName, uint cost)
   {
     name = forumName;
     replyCost = cost;
   }
 
-  function makePost(string title, bytes hash) constant returns(address)
+  function makePost(string title, string data)
   {
-    Document newPost = new Document(hash);
+    Document newPost = new Document(data);
     titles[address(newPost)] = title;
     timeStamp[address(newPost)] = now;
-    return address(newPost);
+    PostMade(address(newPost));
   }
 
   function addTag(address post, string tagToAdd)
@@ -30,7 +33,7 @@ contract Forum
     postTags[post].push(tagToAdd);
   }
 
-  function makeReply(string title, bytes hash, address replyTo, uint weight)
+  function makeReply(string title, string data, address replyTo, uint weight)
   {
     if(msg.value >= replyCost)
     {
@@ -38,7 +41,7 @@ contract Forum
       {
         throw;
       }
-      address reply = makePost(title, hash);
+      address reply = makePost(title, data);
       replies[replyTo].push(reply);
       Document(reply).addSource(replyTo, weight);
     }
