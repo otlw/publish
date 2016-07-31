@@ -21,10 +21,14 @@ contract Document
     }
   }
 
-  function Document(string dataHash, address[] authorAddresses)
+  function Document(string dataHash, address[] authorAddresses, int[] authorWeights)
   {
     data = dataHash;
     authors = authorAddresses;
+    for(uint i = 0; i < authorWeights.length; i++)
+    {
+      weights[authorAddresses[i]] = authorWeights[i];
+    }
   }
 
   function getData() constant returns(string)

@@ -38,7 +38,7 @@ contract Forum
     postTags[post].push(tagToAdd);
   }
 
-  function makeReply(string title, string data, address replyTo, uint weight)
+  function makeReply(string title, string data, address replyTo)
   {
     if(msg.value >= replyCost)
     {
@@ -49,13 +49,16 @@ contract Forum
       address[] memory authors = new address[] (2);
       authors[0] = msg.sender;
       authors[1] = address(this);
-      Document newPost = new Document(data, authors);
+      int[] memory weights = new int[] (2);
+      weights[0] = 75;
+      weights[1] = 0;
+      Document newPost = new Document(data, authors, weights);
       titles[address(newPost)] = title;
       timeStamp[address(newPost)] = now;
       postsByAuthor[msg.sender].push(address(newPost));
       PostMade(address(newPost));
       replies[replyTo].push(address(newPost));
-      Document(address(newPost)).addSource(replyTo, weight);
+      Document(address(newPost)).addSource(replyTo, 25);
     }
   }
 
