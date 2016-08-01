@@ -82,6 +82,11 @@ contract Forum
     return postTags[post][i];
   }
 
+  function getPostsFromAuthos(address author) constant returns(address[])
+  {
+    return postsByAuthor[author];
+  }
+
   function getNumberOfTags(address post) constant returns(uint)
   {
     return postTags[post].length;
