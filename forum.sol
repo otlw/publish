@@ -20,7 +20,7 @@ contract Forum
     replyCost = cost;
   }
 
-  function getReplyCost() returns(uint)
+  function getReplyCost() constant returns(uint)
   {
     return replyCost;
   }
