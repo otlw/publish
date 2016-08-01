@@ -90,7 +90,7 @@ contract Forum
     return postTags[post][i];
   }
 
-  function getPostsFromAuthos(address author) constant returns(address[])
+  function getPostsFromAuthor(address author) constant returns(address[])
   {
     return postsByAuthor[author];
   }
