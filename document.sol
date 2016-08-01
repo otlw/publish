@@ -21,7 +21,7 @@ contract Document
     }
   }
 
-  function Document(string dataHash, address[] authorAddresses, int[] authorWeights)
+  function Document(string dataHash, address[] authorAddresses, uint[] authorWeights)
   {
     data = dataHash;
     authors = authorAddresses;

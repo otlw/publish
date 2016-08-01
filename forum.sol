@@ -30,7 +30,10 @@ contract Forum
     address[] memory authors = new address[] (2);
     authors[0] = msg.sender;
     authors[1] = address(this);
-    Document newPost = new Document(data, authors);
+    uint[] memory weights = new uint[] (2);
+    weights[0] = 75;
+    weights[1] = 0;
+    Document newPost = new Document(data, authors, weights);
     titles[address(newPost)] = title;
     timeStamp[address(newPost)] = now;
     postsByAuthor[msg.sender].push(address(newPost));
@@ -54,7 +57,7 @@ contract Forum
       address[] memory authors = new address[] (2);
       authors[0] = msg.sender;
       authors[1] = address(this);
-      int[] memory weights = new int[] (2);
+      uint[] memory weights = new uint[] (2);
       weights[0] = 75;
       weights[1] = 0;
       Document newPost = new Document(data, authors, weights);
