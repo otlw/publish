@@ -20,6 +20,11 @@ contract Forum
     replyCost = cost;
   }
 
+  function getReplyCost() returns(uint)
+  {
+    return replyCost;
+  }
+
   function makePost(string title, string data)
   {
     address[] memory authors = new address[] (2);
